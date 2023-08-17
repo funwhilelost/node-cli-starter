@@ -1,0 +1,31 @@
+name: pkg binaries
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        arch:
+          - x64
+          - arm64
+        node-version:
+          - node16
+        os:
+          - linux
+          - macos
+          - win
+    steps:
+      - name: Package into node binary
+        uses: lando/pkg-action@v2
+        with:
+          entrypoint: bin/cli
+          arch: ${{ matrix.arch }}
+          node-version: ${{ matrix.node-version }}
+          os: ${{ matrix.os }}
